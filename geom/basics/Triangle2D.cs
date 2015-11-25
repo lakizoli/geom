@@ -56,6 +56,28 @@ namespace geom.basics
             if (!CanIntersect (tria))
                 return null;
 
+            bool hasA = Contains (tria.A);
+            bool hasB = Contains (tria.B);
+            bool hasC = Contains (tria.C);
+
+            if (hasA || hasB || hasC) //tria intersects current triangle
+            {
+            }
+            else
+            {
+                hasA = tria.Contains (A);
+                hasB = tria.Contains (B);
+                hasC = tria.Contains (C);
+
+                if (hasA || hasB || hasC) //current triangle intersects tria
+                {
+                }
+                else
+                {
+                    //TODO: intersections without vertex containment... (or none of intersection)
+                }
+            }
+
             //TODO: ...
 
 			return null;
