@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="basics\Rect2D.cs" />
     <Compile Include="tests\Test1.cs" />
     <Compile Include="tests\TestBase.cs" />
     <Compile Include="tests\TestShape.cs" />

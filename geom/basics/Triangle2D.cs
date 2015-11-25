@@ -35,8 +35,29 @@ namespace geom.basics
 
 		#region Operations
 
-		public List<Vector2D> IntersectionPoints (Triangle2D tria)
+        public Rect2D BoundingBox
+        {
+            get
+            {
+                return new Rect2D (Math.Min (A.X, Math.Min (B.X, C.X)),
+                    Math.Min (A.Y, Math.Min (B.Y, C.Y)),
+                    Math.Max (A.X, Math.Max (B.X, C.X)),
+                    Math.Max (A.Y, Math.Max (B.Y, C.Y)));
+            }
+        }
+
+        public Triangle2D Offset(Vector2D vec)
+        {
+            return new Triangle2D () { A = A + vec, B = B + vec, C = C + vec };
+        }
+
+        public List<Vector2D> IntersectionPoints (Triangle2D tria)
 		{
+            if (!CanIntersect (tria))
+                return null;
+
+            //TODO: ...
+
 			return null;
 		}
 
@@ -58,6 +79,11 @@ namespace geom.basics
             double cp2 = Vector2D.Cross (sideVec, pt2 - side.Start);
 			return cp1 * cp2 >= 0.0;
 		}
+
+        private bool CanIntersect (Triangle2D tria)
+        {
+            return BoundingBox.Intersects (tria.BoundingBox);
+        }
 
 		#endregion
 	}

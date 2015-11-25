@@ -94,6 +94,23 @@ namespace geom.tests
                 Point pt = e.GetPosition (canvas);
                 _draggedTria.Translate = new TranslateTransform (pt.X - _dragStartPt.X + _draggedTriaPt.X, pt.Y - _dragStartPt.Y + _draggedTriaPt.Y);
                 _draggedTria.RenderTransform = _draggedTria.ActualTransform;
+
+                //Testing intersection points
+                Triangle2D test1 = _draggedTria.Triangle.Offset (new Vector2D ((pt.X - _dragStartPt.X + _draggedTriaPt.X) / canvas.RenderSize.Width, (pt.Y - _dragStartPt.Y + _draggedTriaPt.Y) / canvas.RenderSize.Height));
+                Triangle2D test2 = null;
+                if (_draggedTria == _tria1)
+                    test2 = _tria2.Triangle.Offset (_tria2.Translate == null ? new Vector2D() : new Vector2D (_tria2.Translate.X / canvas.RenderSize.Width, _tria2.Translate.Y / canvas.RenderSize.Height));
+                else if (_draggedTria == _tria2)
+                    test2 = _tria1.Triangle.Offset (_tria1.Translate == null ? new Vector2D () : new Vector2D (_tria1.Translate.X / canvas.RenderSize.Width, _tria1.Translate.Y / canvas.RenderSize.Height));
+
+                if (test2 != null)
+                {
+                    List<Vector2D> intersectionPoints = test1.IntersectionPoints (test2);
+                    if (intersectionPoints != null)
+                    {
+                        //...
+                    }
+                }
             }
         }
         #endregion
