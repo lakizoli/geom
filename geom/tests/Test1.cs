@@ -17,15 +17,15 @@ namespace geom.tests {
         private ShapeTriangle2D _draggedTria;
         private Point _draggedTriaPt;
 
-        private ShapeTriangle2D _tria1 = new ShapeTriangle2D {
-            Triangle = new Triangle2D {
-                A = new Vector2D (0.1, 0.1),
-                B = new Vector2D (0.2, 0.2),
-                C = new Vector2D (0, 0.2)
-            },
-            Fill = new SolidColorBrush (Colors.LawnGreen),
-            Stroke = new SolidColorBrush (Colors.DarkGreen)
-        };
+        //private ShapeTriangle2D _tria1 = new ShapeTriangle2D {
+        //    Triangle = new Triangle2D {
+        //        A = new Vector2D (0.1, 0.1),
+        //        B = new Vector2D (0.2, 0.2),
+        //        C = new Vector2D (0, 0.2)
+        //    },
+        //    Fill = new SolidColorBrush (Colors.LawnGreen),
+        //    Stroke = new SolidColorBrush (Colors.DarkGreen)
+        //};
 
         //private ShapeTriangle2D _tria1 = new ShapeTriangle2D {
         //    Triangle = new Triangle2D {
@@ -36,6 +36,16 @@ namespace geom.tests {
         //    Fill = new SolidColorBrush (Colors.LawnGreen),
         //    Stroke = new SolidColorBrush (Colors.DarkGreen)
         //};
+
+        private ShapeTriangle2D _tria1 = new ShapeTriangle2D {
+            Triangle = new Triangle2D {
+                A = new Vector2D (0.1, 0.2),
+                B = new Vector2D (0.2, 0.1),
+                C = new Vector2D (0, 0.1)
+            },
+            Fill = new SolidColorBrush (Colors.LawnGreen),
+            Stroke = new SolidColorBrush (Colors.DarkGreen)
+        };
 
         private ShapeTriangle2D _tria2 = new ShapeTriangle2D {
             Triangle = new Triangle2D {
@@ -49,6 +59,8 @@ namespace geom.tests {
 
         private SolidColorBrush _brushTransparent = new SolidColorBrush (Colors.Transparent);
         private SolidColorBrush _brushRed = new SolidColorBrush (Colors.Red);
+        private SolidColorBrush _brushBlue = new SolidColorBrush (Colors.Blue);
+        private SolidColorBrush _brushBlueTrans = new SolidColorBrush (new Color () { R = 0, G = 0, B = 255, A = 192 } );
         #endregion
 
         public Test1 (Canvas _canvas) : base (_canvas) {
@@ -106,7 +118,7 @@ namespace geom.tests {
                     UIElement element = canvas.Children[i - 1];
                     if (element is Shape) {
                         object tag = ((Shape)element).Tag;
-                        if (tag != null && (int)tag == 100)
+                        if (tag != null && ((int)tag == 100 || (int)tag == 101))
                             canvas.Children.RemoveAt (i - 1);
                     }
                 }
@@ -123,6 +135,19 @@ namespace geom.tests {
                                 Stroke = _brushRed,
                                 StrokeThickness = 3,
                                 Tag = 100
+                            });
+                        }
+                    }
+
+                    List<Triangle2D> intersectionTriangles = Triangle2D.Cut (test2, test1); //Cut with dragged triangle
+                    if (intersectionTriangles != null) {
+                        foreach (Triangle2D tria in intersectionTriangles) {
+                            canvas.Children.Add (new ShapeTriangle2D () {
+                                Triangle = tria,
+                                Fill = _brushBlueTrans,
+                                Stroke = _brushBlue,
+                                StrokeThickness = 1.5,
+                                Tag = 101
                             });
                         }
                     }

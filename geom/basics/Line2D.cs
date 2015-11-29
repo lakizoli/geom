@@ -52,8 +52,10 @@ namespace geom.basics {
             return pt;
         }
 
-        public Vector2D Intersection (Line2D line) {
-            return Line2D.Intersection (this, line);
+        public bool Contains (Vector2D pt) {
+            double leftSide = (pt.X - Start.X) * (End.Y - Start.Y);
+            double rightSide = (End.X - Start.X) * (pt.Y - Start.Y);
+            return Math.Abs (leftSide - rightSide) < 1e-8;
         }
 
         #endregion
