@@ -15,29 +15,24 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace geom
-{
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
-	{
+namespace geom {
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window {
         private TestBase _currentTest;
-        public MainWindow ()
-		{
-			InitializeComponent ();
-		}
+        public MainWindow () {
+            InitializeComponent ();
+        }
 
-		#region Event Handlers
+        #region Event Handlers
 
-		private void Button_Test1_Click (object sender, RoutedEventArgs e)
-		{
+        private void Button_Test1_Click (object sender, RoutedEventArgs e) {
             _currentTest = new Test1 (canvas);
             _currentTest.Init ();
         }
 
-        private void canvas_SizeChanged (object sender, SizeChangedEventArgs e)
-        {
+        private void canvas_SizeChanged (object sender, SizeChangedEventArgs e) {
             foreach (Shape child in canvas.Children) {
                 if (child is ShapeTriangle2D) {
                     child.RenderTransform = ((ShapeTriangle2D)child).ActualTransform;
@@ -45,28 +40,23 @@ namespace geom
             }
         }
 
-        private void canvas_MouseLeftButtonDown (object sender, MouseButtonEventArgs e)
-        {
+        private void canvas_MouseLeftButtonDown (object sender, MouseButtonEventArgs e) {
             if (_currentTest != null)
                 _currentTest.OnMouseLeftButtonDown (sender, e);
         }
-        private void canvas_MouseLeftButtonUp (object sender, MouseButtonEventArgs e)
-        {
+        private void canvas_MouseLeftButtonUp (object sender, MouseButtonEventArgs e) {
             if (_currentTest != null)
                 _currentTest.OnMouseLeftButtonUp (sender, e);
         }
-        private void canvas_MouseEnter (object sender, MouseEventArgs e)
-        {
+        private void canvas_MouseEnter (object sender, MouseEventArgs e) {
             if (_currentTest != null)
                 _currentTest.OnMouseEnter (sender, e);
         }
-        private void canvas_MouseLeave (object sender, MouseEventArgs e)
-        {
+        private void canvas_MouseLeave (object sender, MouseEventArgs e) {
             if (_currentTest != null)
                 _currentTest.OnMouseLeave (sender, e);
         }
-        private void canvas_MouseMove (object sender, MouseEventArgs e)
-        {
+        private void canvas_MouseMove (object sender, MouseEventArgs e) {
             if (_currentTest != null)
                 _currentTest.OnMouseMove (sender, e);
         }

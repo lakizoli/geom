@@ -9,17 +9,14 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace geom.tests
-{
-    abstract class TestShape : Shape
-    {
+namespace geom.tests {
+    #region class TestShape
+    abstract class TestShape : Shape {
         public TranslateTransform Translate { get; set; }
         public RotateTransform Rotation { get; set; }
         private Size OriginalRenderSize { get; set; }
-        public TransformGroup ActualTransform
-        {
-            get
-            {
+        public TransformGroup ActualTransform {
+            get {
                 TransformGroup res = new TransformGroup ();
 
                 Size renderSize = ((Canvas)Parent).RenderSize;
@@ -35,10 +32,8 @@ namespace geom.tests
             }
         }
 
-        protected sealed override Geometry DefiningGeometry
-        {
-            get
-            {
+        protected sealed override Geometry DefiningGeometry {
+            get {
                 OriginalRenderSize = ((Canvas)Parent).RenderSize;
                 Geometry res = DefiningTestGeometry;
                 res.Transform = new ScaleTransform (OriginalRenderSize.Width, OriginalRenderSize.Height);
@@ -47,16 +42,14 @@ namespace geom.tests
         }
 
         protected abstract Geometry DefiningTestGeometry { get; }
-    }
+    } 
+    #endregion
 
     #region Test shapes
-    class ShapeTriangle2D : TestShape
-    {
+    class ShapeTriangle2D : TestShape {
         public Triangle2D Triangle { get; set; }
-        protected override Geometry DefiningTestGeometry
-        {
-            get
-            {
+        protected override Geometry DefiningTestGeometry {
+            get {
                 Point start = new Point (Triangle.A.X, Triangle.A.Y);
 
                 List<PathSegment> segments = new List<PathSegment> (3);
@@ -72,16 +65,23 @@ namespace geom.tests
         }
     }
 
-    class ShapeLine2D : TestShape
-    {
+    class ShapeLine2D : TestShape {
         public Line2D Line { get; set; }
-        protected override Geometry DefiningTestGeometry
-        {
-            get
-            {
+        protected override Geometry DefiningTestGeometry {
+            get {
                 return new LineGeometry (new Point (Line.Start.X, Line.Start.Y), new Point (Line.End.X, Line.End.Y));
             }
         }
-    } 
+    }
+
+    class ShapeCircle2D : TestShape {
+        public Vector2D Center { get; set; }
+        public double Radius { get; set; }
+        protected override Geometry DefiningTestGeometry {
+            get {
+                return new EllipseGeometry (new Point (Center.X, Center.Y), Radius, Radius);
+            }
+        }
+    }
     #endregion
 }
