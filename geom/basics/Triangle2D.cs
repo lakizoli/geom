@@ -356,7 +356,7 @@ namespace geom.basics {
             double distB1 = (side2Pts[0] - sideMiddlePoint).SquareLength;
             double distB2 = (side2Pts[1] - sideMiddlePoint).SquareLength;
 
-            List<Triangle2D> res = res = new List<Triangle2D> ();
+            List<Triangle2D> res = new List<Triangle2D> ();
 
             res.Add (new Triangle2D (side1Pts[distA1 < distA2 ? 0 : 1], sideMiddlePoint, side2Pts[distB1 < distB2 ? 0 : 1]));
             res.Add (new Triangle2D (otherSide.End, side1Pts[distA1 < distA2 ? 1 : 0], otherSide.Start));
