@@ -17,15 +17,15 @@ namespace geom.tests {
         private ShapeTriangle2D _draggedTria;
         private Point _draggedTriaPt;
 
-        //private ShapeTriangle2D _tria1 = new ShapeTriangle2D {
-        //    Triangle = new Triangle2D {
-        //        A = new Vector2D (0.1, 0.1),
-        //        B = new Vector2D (0.2, 0.2),
-        //        C = new Vector2D (0, 0.2)
-        //    },
-        //    Fill = new SolidColorBrush (Colors.LawnGreen),
-        //    Stroke = new SolidColorBrush (Colors.DarkGreen)
-        //};
+        private ShapeTriangle2D _tria1 = new ShapeTriangle2D {
+            Triangle = new Triangle2D {
+                A = new Vector2D (0.1, 0.1),
+                B = new Vector2D (0.2, 0.2),
+                C = new Vector2D (0, 0.2)
+            },
+            Fill = new SolidColorBrush (Colors.LawnGreen),
+            Stroke = new SolidColorBrush (Colors.DarkGreen)
+        };
 
         //private ShapeTriangle2D _tria1 = new ShapeTriangle2D {
         //    Triangle = new Triangle2D {
@@ -37,15 +37,15 @@ namespace geom.tests {
         //    Stroke = new SolidColorBrush (Colors.DarkGreen)
         //};
 
-        private ShapeTriangle2D _tria1 = new ShapeTriangle2D {
-            Triangle = new Triangle2D {
-                A = new Vector2D (0.1, 0.2),
-                B = new Vector2D (0.2, 0.1),
-                C = new Vector2D (0, 0.1)
-            },
-            Fill = new SolidColorBrush (Colors.LawnGreen),
-            Stroke = new SolidColorBrush (Colors.DarkGreen)
-        };
+        //private ShapeTriangle2D _tria1 = new ShapeTriangle2D {
+        //    Triangle = new Triangle2D {
+        //        A = new Vector2D (0.1, 0.2),
+        //        B = new Vector2D (0.2, 0.1),
+        //        C = new Vector2D (0, 0.1)
+        //    },
+        //    Fill = new SolidColorBrush (Colors.LawnGreen),
+        //    Stroke = new SolidColorBrush (Colors.DarkGreen)
+        //};
 
         private ShapeTriangle2D _tria2 = new ShapeTriangle2D {
             Triangle = new Triangle2D {

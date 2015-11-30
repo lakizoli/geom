@@ -100,20 +100,29 @@ namespace geom.basics {
                                 } else if (hasC1 && hasC2) { //sideC has two intersection point
                                     res = CutOneSideWithTwoPoint (tria, cut, pt1, pt2, sideC, tria.B);
                                 } else if ((hasA1 || hasA2) && (hasB1 || hasB2)) { //each of sideA and sideB has one intersection point
-                                    //Itt nincs lekezelve minden eset!!! (fejjel lefele...)
                                     res = new List<Triangle2D> ();
-                                    res.Add (new Triangle2D (pt1, sideC.Start, sideC.End));
-                                    res.Add (new Triangle2D (pt1, pt2, sideC.Start));
+                                    if (cut.Contains (sideC.Start) && cut.Contains (sideC.End)) {
+                                        res.Add (new Triangle2D (pt1, pt2, tria.B));
+                                    } else {
+                                        res.Add (new Triangle2D (pt1, sideC.Start, sideC.End));
+                                        res.Add (new Triangle2D (pt1, pt2, sideC.Start));
+                                    }
                                 } else if ((hasB1 || hasB2) && (hasC1 || hasC2)) { //each of sideB and sideC has one intersection point
-                                    //Itt nincs lekezelve minden eset!!!
                                     res = new List<Triangle2D> ();
-                                    res.Add (new Triangle2D (pt1, sideA.Start, sideA.End));
-                                    res.Add (new Triangle2D (pt1, pt2, sideA.Start));
+                                    if (cut.Contains (sideA.Start) && cut.Contains (sideA.End)) {
+                                        res.Add (new Triangle2D (pt1, pt2, tria.C));
+                                    } else {
+                                        res.Add (new Triangle2D (pt1, sideA.Start, sideA.End));
+                                        res.Add (new Triangle2D (pt1, pt2, sideA.Start));
+                                    }
                                 } else if ((hasC1 || hasC2) && (hasA1 || hasA2)) { //each of sideC and sideA has one intersection point
-                                    //Itt nincs lekezelve minden eset!!!
                                     res = new List<Triangle2D> ();
-                                    res.Add (new Triangle2D (pt1, sideB.Start, sideB.End));
-                                    res.Add (new Triangle2D (pt1, pt2, sideB.End));
+                                    if (cut.Contains (sideB.Start) && cut.Contains (sideB.End)) {
+                                        res.Add (new Triangle2D (pt1, pt2, tria.A));
+                                    } else {
+                                        res.Add (new Triangle2D (pt1, sideB.Start, sideB.End));
+                                        res.Add (new Triangle2D (pt1, pt2, sideB.End));
+                                    }
                                 }
 
                                 break;
@@ -171,7 +180,11 @@ namespace geom.basics {
                                 }
 
                                 if (sideAPoints.Count == 2 && sideBPoints.Count == 2 && sideCPoints.Count == 2) {
-                                    //TODO: ...
+                                    res = new List<Triangle2D> ();
+
+                                    res.Add (CutWithSixPoint (tria.B, sideAPoints, sideBPoints));
+                                    res.Add (CutWithSixPoint (tria.C, sideBPoints, sideCPoints));
+                                    res.Add (CutWithSixPoint (tria.A, sideCPoints, sideAPoints));
                                 }
 
                                 break;
@@ -259,28 +272,78 @@ namespace geom.basics {
             bool hasB = tria.Contains (cut.B);
             bool hasC = tria.Contains (cut.C);
 
-            Vector2D insidePoint = null;
+            Vector2D insidePoint1 = null;
+            Vector2D insidePoint2 = null;
+            Line2D sideCut = null;
 
-            if ((hasA && hasB) || (hasB && hasC) || (hasC && hasA)) { //The cut triangle only touches the sideA from outer
-                //... nothing to do
+            if (hasA && hasB) {
+                Line2D sideA = new Line2D () { Start = cut.A, End = cut.B };
+                Line2D sideB = new Line2D () { Start = cut.B, End = cut.C };
+                Line2D sideC = new Line2D () { Start = cut.C, End = cut.A };
+
+                sideCut = sideA;
+                if (sideB.Contains (intersectionPoint1)) {
+                    insidePoint1 = intersectionPoint2;
+                    insidePoint2 = intersectionPoint1;
+                } else if (sideC.Contains (intersectionPoint1)) {
+                    insidePoint1 = intersectionPoint1;
+                    insidePoint2 = intersectionPoint2;
+                }
+            } else if (hasB && hasC) {
+                Line2D sideA = new Line2D () { Start = cut.A, End = cut.B };
+                Line2D sideB = new Line2D () { Start = cut.B, End = cut.C };
+                Line2D sideC = new Line2D () { Start = cut.C, End = cut.A };
+
+                sideCut = sideB;
+                if (sideC.Contains (intersectionPoint1)) {
+                    insidePoint1 = intersectionPoint2;
+                    insidePoint2 = intersectionPoint1;
+                } else if (sideA.Contains (intersectionPoint1)) {
+                    insidePoint1 = intersectionPoint1;
+                    insidePoint2 = intersectionPoint2;
+                }
+            } else if (hasC && hasA) {
+                Line2D sideA = new Line2D () { Start = cut.A, End = cut.B };
+                Line2D sideB = new Line2D () { Start = cut.B, End = cut.C };
+                Line2D sideC = new Line2D () { Start = cut.C, End = cut.A };
+
+                sideCut = sideC;
+                if (sideA.Contains (intersectionPoint1)) {
+                    insidePoint1 = intersectionPoint2;
+                    insidePoint2 = intersectionPoint1;
+                } else if (sideB.Contains (intersectionPoint1)) {
+                    insidePoint1 = intersectionPoint1;
+                    insidePoint2 = intersectionPoint2;
+                }
             } else if (hasA) {
-                insidePoint = cut.A;
+                insidePoint1 = cut.A;
             } else if (hasB) {
-                insidePoint = cut.B;
+                insidePoint1 = cut.B;
             } else if (hasC) {
-                insidePoint = cut.C;
+                insidePoint1 = cut.C;
             }
 
-            if (insidePoint != null) {
+            if (insidePoint1 != null && insidePoint2 != null && sideCut != null) { //Two inside point case
+                double dist1 = (insidePoint1 - side.Start).SquareLength;
+                double dist2 = (insidePoint2 - side.Start).SquareLength;
+
+                res = new List<Triangle2D> ();
+
+                res.Add (new Triangle2D (sideCut.Start, insidePoint1, dist1 < dist2 ? side.Start : side.End));
+                res.Add (new Triangle2D (sideCut.End, insidePoint2, dist1 < dist2 ? side.End : side.Start));
+                res.Add (new Triangle2D (sideCut.Start, dist1 < dist2 ? side.Start : side.End, triaNotOnSideNode));
+                res.Add (new Triangle2D (sideCut.End, dist1 < dist2 ? side.End : side.Start, triaNotOnSideNode));
+                res.Add (new Triangle2D (sideCut.Start, sideCut.End, triaNotOnSideNode));
+            } else if (insidePoint1 != null) { //One inside point case
                 double dist1 = (intersectionPoint1 - side.Start).SquareLength;
                 double dist2 = (intersectionPoint2 - side.Start).SquareLength;
 
                 res = new List<Triangle2D> ();
 
-                res.Add (new Triangle2D (side.Start, dist1 < dist2 ? intersectionPoint1 : intersectionPoint2, insidePoint));
-                res.Add (new Triangle2D (side.Start, insidePoint, triaNotOnSideNode));
-                res.Add (new Triangle2D (dist1 < dist2 ? intersectionPoint2 : intersectionPoint1, side.End, insidePoint));
-                res.Add (new Triangle2D (side.End, triaNotOnSideNode, insidePoint));
+                res.Add (new Triangle2D (side.Start, dist1 < dist2 ? intersectionPoint1 : intersectionPoint2, insidePoint1));
+                res.Add (new Triangle2D (side.Start, insidePoint1, triaNotOnSideNode));
+                res.Add (new Triangle2D (dist1 < dist2 ? intersectionPoint2 : intersectionPoint1, side.End, insidePoint1));
+                res.Add (new Triangle2D (side.End, triaNotOnSideNode, insidePoint1));
             }
 
             return res;
@@ -311,6 +374,15 @@ namespace geom.basics {
             res.Add (new Triangle2D (sidePoints[dist1 < dist2 ? 1 : 0], endIntersectionPoint, side.End));
 
             return res;
+        }
+
+        private static Triangle2D CutWithSixPoint (Vector2D triaPt, List<Vector2D> side1Points, List<Vector2D> side2Points) {
+            double dist1pt1 = (triaPt - side1Points[0]).SquareLength;
+            double dist1pt2 = (triaPt - side1Points[1]).SquareLength;
+            double dist2pt1 = (triaPt - side2Points[0]).SquareLength;
+            double dist2pt2 = (triaPt - side2Points[1]).SquareLength;
+
+            return new Triangle2D (side1Points[dist1pt1 < dist1pt2 ? 0 : 1], triaPt, side2Points[dist2pt1 < dist2pt2 ? 0 : 1]);
         }
 
         private static Vector2D NearestPoint (Vector2D triaPoint, Triangle2D cut) {
